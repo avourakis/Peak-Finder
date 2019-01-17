@@ -12,9 +12,11 @@
 		41D9D8AB21F03ABE0039E9BD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41D9D8A921F03ABE0039E9BD /* Main.storyboard */; };
 		41D9D8AD21F03ABF0039E9BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41D9D8AC21F03ABF0039E9BD /* Assets.xcassets */; };
 		41D9D8B021F03ABF0039E9BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41D9D8AE21F03ABF0039E9BD /* LaunchScreen.storyboard */; };
+		9FF7840BBB5879F09E7BF12A /* Pods_Peak_Finder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA0B6CD26B201A0E5877821 /* Pods_Peak_Finder.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D834BBF44B8F9C6803638B9 /* Pods-Peak Finder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Peak Finder.release.xcconfig"; path = "Pods/Target Support Files/Pods-Peak Finder/Pods-Peak Finder.release.xcconfig"; sourceTree = "<group>"; };
 		41D9D8A221F03ABE0039E9BD /* Peak Finder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Peak Finder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41D9D8A521F03ABE0039E9BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41D9D8A721F03ABE0039E9BD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +24,8 @@
 		41D9D8AC21F03ABF0039E9BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41D9D8AF21F03ABF0039E9BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41D9D8B121F03ABF0039E9BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAA0B6CD26B201A0E5877821 /* Pods_Peak_Finder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Peak_Finder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA97E639B513273C06409197 /* Pods-Peak Finder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Peak Finder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Peak Finder/Pods-Peak Finder.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +33,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FF7840BBB5879F09E7BF12A /* Pods_Peak_Finder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		289082053CF89758E2992DD3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DA97E639B513273C06409197 /* Pods-Peak Finder.debug.xcconfig */,
+				2D834BBF44B8F9C6803638B9 /* Pods-Peak Finder.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		41D9D89921F03ABE0039E9BD = {
 			isa = PBXGroup;
 			children = (
 				41D9D8A421F03ABE0039E9BD /* Peak Finder */,
 				41D9D8A321F03ABE0039E9BD /* Products */,
+				289082053CF89758E2992DD3 /* Pods */,
+				A55793E88804A9EFF5172FF1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +80,14 @@
 			path = "Peak Finder";
 			sourceTree = "<group>";
 		};
+		A55793E88804A9EFF5172FF1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AAA0B6CD26B201A0E5877821 /* Pods_Peak_Finder.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -71,9 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 41D9D8B421F03ABF0039E9BD /* Build configuration list for PBXNativeTarget "Peak Finder" */;
 			buildPhases = (
+				7C3E44F0AE24B4CA95BCB793 /* [CP] Check Pods Manifest.lock */,
 				41D9D89E21F03ABE0039E9BD /* Sources */,
 				41D9D89F21F03ABE0039E9BD /* Frameworks */,
 				41D9D8A021F03ABE0039E9BD /* Resources */,
+				7D8884EDA8F46B69728C20C7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -129,6 +155,75 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7C3E44F0AE24B4CA95BCB793 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Peak Finder-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7D8884EDA8F46B69728C20C7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Peak Finder/Pods-Peak Finder-frameworks.sh",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/MapboxCoreNavigation/MapboxCoreNavigation.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxDirections.swift/MapboxDirections.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
+				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework",
+				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
+				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
+				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
+				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreNavigation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxDirections.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/MapboxNavigationNative.framework.dSYM",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Solar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Peak Finder/Pods-Peak Finder-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		41D9D89E21F03ABE0039E9BD /* Sources */ = {
@@ -280,6 +375,7 @@
 		};
 		41D9D8B521F03ABF0039E9BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DA97E639B513273C06409197 /* Pods-Peak Finder.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -298,6 +394,7 @@
 		};
 		41D9D8B621F03ABF0039E9BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D834BBF44B8F9C6803638B9 /* Pods-Peak Finder.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
