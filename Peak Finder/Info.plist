@@ -20,6 +20,24 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MGLMapboxAccessToken</key>
+	<string>pk.eyJ1IjoiYXZvdXJha2lzIiwiYSI6ImNqcXpoZWpkaDBlZHY0NHFxeHFzaGFxMzcifQ.ro_qzyKAiqm6cqFwYMMYsA</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>Allow Arbitrary Loads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>http://overpass-api.de</key>
+			<string></string>
+		</dict>
+	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Shows your location on the map and helps improve OpenStreetMap</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

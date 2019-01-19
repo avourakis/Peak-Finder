@@ -12,27 +12,99 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxNavigation
 
+// JSON Response Structure from Overpass API
+
+struct Infos: Decodable{
+    let elements: [Element]?
+}
+
+struct Element: Decodable{
+    let id: Int?
+    let lat: Float?
+    let lon: Float?
+    let tags: Tag?
+
+}
+
+struct Tag: Decodable{
+    let name: String?
+}
+
 
 class ViewController: UIViewController, MGLMapViewDelegate {
     var mapView: NavigationMapView!
     var directionsRoute: Route?
     let toCoordinate = CLLocationCoordinate2D(latitude: 33.6494657, longitude: -117.8100549)
     var navigateButton: UIButton!
+    @IBOutlet weak var findPeaksButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        mapView = NavigationMapView(frame: view.bounds) // view.bounds makes the map cover the entire screen
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView) // Makes the Map view show up
         
-        mapView.delegate = self
-        mapView.showsUserLocation = true // Display user's location on the map
-        
-        mapView.setUserTrackingMode(.follow, animated: true)
-        
-        addButton()
+        findPeaksButton.setTitle("Find Peaks Near Me", for: .normal)
+        findPeaksButton.layer.cornerRadius = 10
+        findPeaksButton.clipsToBounds = true
+        findPeaksButton.layer.shadowOffset = CGSize(width:0, height: 10)
+            
     }
+    
+    func findPeaks(){
+        // Access Overpass API to get the nearest peaks
+
+        //guard let url = URL(string: "https://overpass-api.de/api/interpreter?data=node['highway'='bus_stop']['shelter']['shelter'!='no'](50.7,7.1,50.8,7.25);out;") else {return}
+        guard let url = URL(string: "https://overpass-api.de/api/interpreter?data=[out:json];node['natural'='peak'](around:35000,33.658704,-117.936080);out;") else {return}
+
+        print("About to GET")
+        let session = URLSession.shared
+        session.dataTask(with: url) { (data, response, error) in
+            if let response = response{
+                print(response)
+            }
+            
+            if let data = data{
+                
+                
+                do{
+                    let infos = try JSONDecoder().decode(Infos.self, from: data)
+                    for element in infos.elements!{
+                        print(element.id)
+                        print(element.lat)
+                        print(element.lon)
+                        print(element.tags!.name)
+                    }
+                } catch{
+                    print("We got an error \(error)")
+                }
+ 
+                //let dataAsString = String(data: data, encoding: .utf8)
+                //print(dataAsString)
+                
+            }
+        }.resume()
+       
+    }
+
+
+    @IBAction func findPeaksButtonWasPressed(_ sender: Any) {
+        //print("Button was pressed")
+        
+        findPeaks()
+        
+        /*
+         mapView = NavigationMapView(frame: view.bounds) // view.bounds makes the map cover the entire screen
+         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+         view.addSubview(mapView) // Makes the Map view show up
+         
+         mapView.delegate = self
+         mapView.showsUserLocation = true // Display user's location on the map
+         
+         mapView.setUserTrackingMode(.follow, animated: true)
+         
+         addButton()
+    */
+ 
+    }
+
     
     func addButton(){
         navigateButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-75, width: 200, height: 50))
