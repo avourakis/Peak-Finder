@@ -2,6 +2,8 @@
 
 Finds the nearest mountain peaks based on your current location
 
+![gif-screenshot](/Screenshots/find-peaks.gif)
+
 ## Motivation
 
 The goal of this project was to learn how to build an iOS App and use Openstreemap data.
