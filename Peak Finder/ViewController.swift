@@ -37,16 +37,28 @@ struct Tag: Decodable{
 }
 
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     var mapView: NavigationMapView!
     var directionsRoute: Route?
     let toCoordinate = CLLocationCoordinate2D(latitude: 33.6494657, longitude: -117.8100549)
     var refreshButton: UIButton!
     var navigateButton: UIButton!
+    var currentLocation: CLLocationCoordinate2D!
     @IBOutlet weak var findPeaksButton: UIButton!
+    let locationManager = CLLocationManager()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Request user location
+        locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled(){
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
         
         // Format findPeaksButton
         findPeaksButton.setTitle("Find Peaks Near Me", for: .normal)
@@ -54,6 +66,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         findPeaksButton.clipsToBounds = true
         findPeaksButton.layer.shadowOffset = CGSize(width:0, height: 10)
             
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first{
+            currentLocation = location.coordinate
+        }
     }
     
     func callOverpass(radius: Int, lat: Double, lon: Double) -> Infos{
@@ -86,11 +104,15 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func findPeaks() -> [Double: [String: String]]{
         // Access Overpass API to get the nearest peaks
-        let lat = 33.658704
-        let lon = -117.936080
+        //let lat = 33.658704
+        //let lon = -117.936080
+        
+        let lat = currentLocation.latitude
+        let lon = currentLocation.longitude
+        
         var resultDict: [Double: [String: String]] = [:]
         
-        for radius in stride(from:5, to:100, by: 25){
+        for radius in stride(from:5, to:100, by: 20){
             
             let infos = callOverpass(radius: radius, lat: lat, lon:lon)
 
@@ -99,7 +121,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
                 if element.lon != nil && element.lat != nil && element.tags!.name != nil{
                     let from = CLLocation(latitude: lat, longitude: lon)
                     let to = CLLocation(latitude: element.lat!, longitude: element.lon!)
-                    resultDict[to.distance(from: from)] = ["name": element.tags!.name!, "lat":String(element.lat!), "lon": String(element.lon!)]
+                    resultDict[to.distance(from: from)] = ["name": element.tags!.name!, "lat":String(element.lat!), "lon": String(element.lon!)] // Is distance in miles or km?
                 }
                 
             }
