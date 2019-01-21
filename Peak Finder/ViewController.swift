@@ -11,17 +11,23 @@ import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
 import MapboxNavigation
+import CoreLocation
 
 // JSON Response Structure from Overpass API
 
 struct Infos: Decodable{
     let elements: [Element]?
+    
+    init(elements: [Element]? = nil){
+        
+        self.elements = elements
+    }
 }
 
 struct Element: Decodable{
     let id: Int?
-    let lat: Float?
-    let lon: Float?
+    let lat: Double?
+    let lon: Double?
     let tags: Tag?
 
 }
@@ -41,6 +47,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Format findPeaksButton
         findPeaksButton.setTitle("Find Peaks Near Me", for: .normal)
         findPeaksButton.layer.cornerRadius = 10
         findPeaksButton.clipsToBounds = true
@@ -48,46 +55,61 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             
     }
     
-    func findPeaks(){
-        // Access Overpass API to get the nearest peaks
+    func callOverpass(radius: Int, lat: Double, lon: Double, completionHandler: @escaping (_ infos:Infos) -> Void){
+        let api = "https://overpass-api.de/api/interpreter?data="
+        let query = String(format: "[out:json];node['natural'='peak'](around:\(Float(radius)*1609.344),\(lat),\(lon));out;")
+        guard let url = URL(string: api + query) else {return}
 
-        //guard let url = URL(string: "https://overpass-api.de/api/interpreter?data=node['highway'='bus_stop']['shelter']['shelter'!='no'](50.7,7.1,50.8,7.25);out;") else {return}
-        guard let url = URL(string: "https://overpass-api.de/api/interpreter?data=[out:json];node['natural'='peak'](around:35000,33.658704,-117.936080);out;") else {return}
 
         print("About to GET")
         let session = URLSession.shared
-        session.dataTask(with: url) { (data, response, error) in
-            if let response = response{
-                print(response)
-            }
+        session.dataTask(with: url) { (data, _, error) in
             
             if let data = data{
-                
-                
+           
                 do{
                     let infos = try JSONDecoder().decode(Infos.self, from: data)
-                    for element in infos.elements!{
-                        print(element.id)
-                        print(element.lat)
-                        print(element.lon)
-                        print(element.tags!.name)
-                    }
+                    completionHandler(infos)
+
                 } catch{
                     print("We got an error \(error)")
                 }
- 
-                //let dataAsString = String(data: data, encoding: .utf8)
-                //print(dataAsString)
                 
             }
-        }.resume()
-       
+            }.resume()
     }
+    
+    func findPeaks(){
+        // Access Overpass API to get the nearest peaks
+        let lat = 33.658704
+        let lon = -117.936080
+        
+        for radius in stride(from:5, to:100, by: 5){
+            print(radius)
+            callOverpass(radius: radius, lat: lat, lon:lon, completionHandler: { (infos) -> Void in
+                var resultDict: [Double: [String: String]] = [:]
+                for element in infos.elements!{
+                    //print(element.id)
+                    if element != nil{
+                        if element.lon != nil && element.lat != nil && element.tags!.name != nil{
+                            let from = CLLocation(latitude: lat, longitude: lon)
+                            let to = CLLocation(latitude: element.lat!, longitude: element.lon!)
+                            resultDict[to.distance(from: from)] = ["name": element.tags!.name!, "lat":String(element.lat!), "lon": String(element.lon!)]
+                            print(resultDict)
+                        }
+                        
+                    }
+                }
+            })
+        
+            }
+        }
+    
 
 
     @IBAction func findPeaksButtonWasPressed(_ sender: Any) {
         //print("Button was pressed")
-        
+
         findPeaks()
         
         /*
@@ -102,7 +124,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
          
          addButton()
     */
- 
+        //print("Hello")
+        
     }
 
     
