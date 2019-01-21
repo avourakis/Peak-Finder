@@ -41,6 +41,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var mapView: NavigationMapView!
     var directionsRoute: Route?
     let toCoordinate = CLLocationCoordinate2D(latitude: 33.6494657, longitude: -117.8100549)
+    var refreshButton: UIButton!
     var navigateButton: UIButton!
     @IBOutlet weak var findPeaksButton: UIButton!
     
@@ -63,7 +64,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         print("About to GET")
         let semaphore = DispatchSemaphore(value: 0)
-        //let session = URLSession.shared
+
         let session = URLSession.shared.dataTask(with: url) { (data, _, error) in
             
             if let data = data{
@@ -90,7 +91,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         var resultDict: [Double: [String: String]] = [:]
         
         for radius in stride(from:5, to:100, by: 25){
-            print(radius)
+            
             let infos = callOverpass(radius: radius, lat: lat, lon:lon)
 
             for element in infos.elements!{
@@ -110,31 +111,54 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBAction func findPeaksButtonWasPressed(_ sender: Any) {
         //print("Button was pressed")
 
-        let peak = findPeaks()
+        let peaks = findPeaks() // Finds mountain peaks nearby using the Overpass API
         
+        mapView = NavigationMapView(frame: view.bounds) // view.bounds makes the map cover the entire screen
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView) // Makes the Map view show up
         
-        /*
-         mapView = NavigationMapView(frame: view.bounds) // view.bounds makes the map cover the entire screen
-         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-         view.addSubview(mapView) // Makes the Map view show up
-         
-         mapView.delegate = self
-         mapView.showsUserLocation = true // Display user's location on the map
-         
-         mapView.setUserTrackingMode(.follow, animated: true)
-         
-         addButton()
-    */
-        //print("Hello")
+        // Add Nearby mountain peaks to the map
+        let peaksSorted = peaks.keys.sorted()
+        var count = 1
+        for peak in peaksSorted{
+            let annotation = MGLPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: Double(peaks[peak]!["lat"]!)!, longitude: Double(peaks[peak]!["lon"]!)!)
+            let peakName = peaks[peak]!["name"]!
+            annotation.title = "Find Directions to \"\(peakName)\""
+            mapView.addAnnotation(annotation)
+            if count == 5 {break} // Limit to top 5 results
+            else {count = count + 1}
+        }
+        
+        mapView.delegate = self
+        mapView.showsUserLocation = true // Display user's location on the map
+        mapView.setUserTrackingMode(.follow, animated: true)
+
+        addRefreshButton()
+
         
     }
 
     
-    func addButton(){
+    func addRefreshButton(){
+        
+        refreshButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-75, width: 200, height: 50))
+        refreshButton.backgroundColor =  #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        refreshButton.setTitle("Refresh", for: .normal)
+        refreshButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
+        refreshButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size:18)
+        refreshButton.layer.cornerRadius = 25
+        refreshButton.layer.shadowOffset = CGSize(width:0, height: 10)
+        refreshButton.addTarget(self, action: #selector(findPeaksButtonWasPressed(_:)), for: .touchUpInside)
+        view.addSubview(refreshButton)
+    }
+    
+    func addNavigateButton(){
         navigateButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-75, width: 200, height: 50))
-        navigateButton.backgroundColor =  #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        navigateButton.setTitle("NAVIGATE", for: .normal)
-        navigateButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
+        navigateButton.backgroundColor =  #colorLiteral(red: 0.3387691593, green: 0.5320139941, blue: 1, alpha: 1)
+        navigateButton.setTitle("Start Navigation", for: .normal)
+        //navigateButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
+        navigateButton.setTitleColor(UIColor(red:255/255, green: 255/255, blue: 255/255, alpha: 1), for: .normal)
         navigateButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size:18)
         navigateButton.layer.cornerRadius = 25
         navigateButton.layer.shadowOffset = CGSize(width:0, height: 10)
@@ -142,6 +166,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         view.addSubview(navigateButton)
     }
     
+    @objc func navigateButtonWasPressed(_ sender: UIButton){
+        let navigationVC = NavigationViewController(for: directionsRoute!)
+        present(navigationVC, animated: true, completion: nil)
+    }
+    
+    /*
     @objc func navigateButtonWasPressed(_ sender: UIButton) {
         // Start nagivation from current location to destination
         
@@ -158,9 +188,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             }
         }
     }
+    */
     
     func calculateRoute(from originCoor: CLLocationCoordinate2D, to destinationCoor: CLLocationCoordinate2D, completion: @escaping (Route?, Error?) -> Void) {
         // Calculate the route from current location to destination. Returns error if no route can be calculated
+        
+        refreshButton.removeFromSuperview()
         
         let origin = Waypoint(coordinate: originCoor, coordinateAccuracy: -1, name: "Start")
         let destination = Waypoint(coordinate: destinationCoor, coordinateAccuracy: -1, name: "Finish")
@@ -178,7 +211,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             let routeCam = self.mapView.cameraThatFitsCoordinateBounds(coordinateBounds, edgePadding: insets)
             self.mapView.setCamera(routeCam, animated: true)
             
+            
+            
         })
+        
+        addNavigateButton()
     }
     
     func drawRoute(route: Route){
@@ -211,8 +248,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, tapOnCalloutFor annotation: MGLAnnotation){
-        let navigationVC = NavigationViewController(for: directionsRoute!)
-        present(navigationVC, animated: true, completion: nil)
+        
+        calculateRoute(from: mapView.userLocation!.coordinate, to: annotation.coordinate) { (route, error) in
+            if error != nil {
+                print("Error getting route")
+            }
+        }
+        
+
         
     }
     
