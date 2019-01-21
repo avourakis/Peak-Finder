@@ -2,13 +2,18 @@
 
 Finds the nearest mountain peaks based on your current location
 
-![gif-screenshot](/Screenshots/find-peaks.gif)
+<img src="/Screenshots/find-peaks.gif" alt="sample" width="40%">
 
 ## Motivation
 
 The goal of this project was to learn how to build an iOS App and use Openstreemap data.
 
-### Prerequisites
+### Requirements
+
+- Xcode 10
+- iOS 8
+- Mapbox: Maps SDK for iOS
+- Mapbox: Navigation SDK for iOS
 
 ## Acknowledgments
 
