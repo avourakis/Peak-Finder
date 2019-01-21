@@ -55,62 +55,63 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             
     }
     
-    func callOverpass(radius: Int, lat: Double, lon: Double, completionHandler: @escaping (_ infos:Infos) -> Void){
+    func callOverpass(radius: Int, lat: Double, lon: Double) -> Infos{
         let api = "https://overpass-api.de/api/interpreter?data="
         let query = String(format: "[out:json];node['natural'='peak'](around:\(Float(radius)*1609.344),\(lat),\(lon));out;")
-        guard let url = URL(string: api + query) else {return}
-
+        var infos = Infos()
+        guard let url = URL(string: api + query) else {return infos}
 
         print("About to GET")
-        let session = URLSession.shared
-        session.dataTask(with: url) { (data, _, error) in
+        let semaphore = DispatchSemaphore(value: 0)
+        //let session = URLSession.shared
+        let session = URLSession.shared.dataTask(with: url) { (data, _, error) in
             
             if let data = data{
            
                 do{
-                    let infos = try JSONDecoder().decode(Infos.self, from: data)
-                    completionHandler(infos)
+                    infos = try JSONDecoder().decode(Infos.self, from: data)
 
                 } catch{
                     print("We got an error \(error)")
                 }
                 
             }
+            semaphore.signal()
             }.resume()
+        
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+        return infos
     }
     
-    func findPeaks(){
+    func findPeaks() -> [Double: [String: String]]{
         // Access Overpass API to get the nearest peaks
         let lat = 33.658704
         let lon = -117.936080
+        var resultDict: [Double: [String: String]] = [:]
         
-        for radius in stride(from:5, to:100, by: 5){
+        for radius in stride(from:5, to:100, by: 25){
             print(radius)
-            callOverpass(radius: radius, lat: lat, lon:lon, completionHandler: { (infos) -> Void in
-                var resultDict: [Double: [String: String]] = [:]
-                for element in infos.elements!{
-                    //print(element.id)
-                    if element != nil{
-                        if element.lon != nil && element.lat != nil && element.tags!.name != nil{
-                            let from = CLLocation(latitude: lat, longitude: lon)
-                            let to = CLLocation(latitude: element.lat!, longitude: element.lon!)
-                            resultDict[to.distance(from: from)] = ["name": element.tags!.name!, "lat":String(element.lat!), "lon": String(element.lon!)]
-                            print(resultDict)
-                        }
-                        
-                    }
-                }
-            })
-        
-            }
-        }
-    
+            let infos = callOverpass(radius: radius, lat: lat, lon:lon)
 
+            for element in infos.elements!{
+
+                if element.lon != nil && element.lat != nil && element.tags!.name != nil{
+                    let from = CLLocation(latitude: lat, longitude: lon)
+                    let to = CLLocation(latitude: element.lat!, longitude: element.lon!)
+                    resultDict[to.distance(from: from)] = ["name": element.tags!.name!, "lat":String(element.lat!), "lon": String(element.lon!)]
+                }
+                
+            }
+            if resultDict != [:] {break}
+        }
+        return resultDict
+    }
 
     @IBAction func findPeaksButtonWasPressed(_ sender: Any) {
         //print("Button was pressed")
 
-        findPeaks()
+        let peak = findPeaks()
+        
         
         /*
          mapView = NavigationMapView(frame: view.bounds) // view.bounds makes the map cover the entire screen
