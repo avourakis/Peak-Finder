@@ -65,7 +65,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         print("About to GET")
         let semaphore = DispatchSemaphore(value: 0)
 
-        let session = URLSession.shared.dataTask(with: url) { (data, _, error) in
+        let _ = URLSession.shared.dataTask(with: url) { (data, _, error) in
             
             if let data = data{
            
@@ -138,11 +138,22 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         
     }
-
+    
+    func addSmallRefreshButton(){
+        refreshButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 175, y: view.frame.height-90, width: 150, height: 50))
+        refreshButton.backgroundColor =  #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        refreshButton.setTitle("Refresh", for: .normal)
+        refreshButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
+        refreshButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size:18)
+        refreshButton.layer.cornerRadius = 25
+        refreshButton.layer.shadowOffset = CGSize(width:0, height: 10)
+        refreshButton.addTarget(self, action: #selector(findPeaksButtonWasPressed(_:)), for: .touchUpInside)
+        view.addSubview(refreshButton)
+    }
     
     func addRefreshButton(){
         
-        refreshButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-75, width: 200, height: 50))
+        refreshButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-90, width: 200, height: 50))
         refreshButton.backgroundColor =  #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         refreshButton.setTitle("Refresh", for: .normal)
         refreshButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
@@ -154,7 +165,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func addNavigateButton(){
-        navigateButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 100, y: view.frame.height-75, width: 200, height: 50))
+        navigateButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 15, y: view.frame.height-90, width: 195, height: 50))
         navigateButton.backgroundColor =  #colorLiteral(red: 0.3387691593, green: 0.5320139941, blue: 1, alpha: 1)
         navigateButton.setTitle("Start Navigation", for: .normal)
         //navigateButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
@@ -194,6 +205,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // Calculate the route from current location to destination. Returns error if no route can be calculated
         
         refreshButton.removeFromSuperview()
+        addSmallRefreshButton()
         
         let origin = Waypoint(coordinate: originCoor, coordinateAccuracy: -1, name: "Start")
         let destination = Waypoint(coordinate: destinationCoor, coordinateAccuracy: -1, name: "Finish")
