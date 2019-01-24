@@ -62,9 +62,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         // Format findPeaksButton
         findPeaksButton.setTitle("Find Peaks Near Me", for: .normal)
-        findPeaksButton.layer.cornerRadius = 10
+        findPeaksButton.layer.cornerRadius = 25
         findPeaksButton.clipsToBounds = true
         findPeaksButton.layer.shadowOffset = CGSize(width:0, height: 10)
+        //findPeaksButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
             
     }
     
@@ -103,9 +104,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func findPeaks() -> [Double: [String: String]]{
-        // Access Overpass API to get the nearest peaks
-        //let lat = 33.658704
-        //let lon = -117.936080
+        // Access Overpass API to get the nearest peak
         
         let lat = currentLocation.latitude
         let lon = currentLocation.longitude
@@ -190,7 +189,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         navigateButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 15, y: view.frame.height-90, width: 195, height: 50))
         navigateButton.backgroundColor =  #colorLiteral(red: 0.3387691593, green: 0.5320139941, blue: 1, alpha: 1)
         navigateButton.setTitle("Start Navigation", for: .normal)
-        //navigateButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
         navigateButton.setTitleColor(UIColor(red:255/255, green: 255/255, blue: 255/255, alpha: 1), for: .normal)
         navigateButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size:18)
         navigateButton.layer.cornerRadius = 25
@@ -204,24 +202,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(navigationVC, animated: true, completion: nil)
     }
     
-    /*
-    @objc func navigateButtonWasPressed(_ sender: UIButton) {
-        // Start nagivation from current location to destination
-        
-        mapView.setUserTrackingMode(.none, animated: true)
-        
-        let annotation = MGLPointAnnotation()
-        annotation.coordinate = toCoordinate
-        annotation.title = "Start Navigation"
-        mapView.addAnnotation(annotation)
-        
-        calculateRoute(from: mapView.userLocation!.coordinate, to: toCoordinate) { (route, error) in
-            if error != nil {
-                print("Error getting route")
-            }
-        }
-    }
-    */
     
     func calculateRoute(from originCoor: CLLocationCoordinate2D, to destinationCoor: CLLocationCoordinate2D, completion: @escaping (Route?, Error?) -> Void) {
         // Calculate the route from current location to destination. Returns error if no route can be calculated
@@ -289,11 +269,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             }
         }
         
-
-        
     }
-    
-    
     
 }
 
