@@ -65,7 +65,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         findPeaksButton.layer.cornerRadius = 25
         findPeaksButton.clipsToBounds = true
         findPeaksButton.layer.shadowOffset = CGSize(width:0, height: 10)
-        //findPeaksButton.setTitleColor(UIColor(red:59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
             
     }
     
@@ -111,7 +110,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         var resultDict: [Double: [String: String]] = [:]
         
-        for radius in stride(from:5, to:100, by: 20){
+        for radius in stride(from:10, to:100, by: 20){
             
             let infos = callOverpass(radius: radius, lat: lat, lon:lon)
 
